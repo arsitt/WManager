@@ -1,0 +1,37 @@
+version: '3'
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "mypassword"
+      POSTGRES_DB: manager_db
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+
+  nodejs-app:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+
+  angular-app:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
+    networks:
+      - app-network 
+
+
+networks:
+  app-network:
+    driver: bridge
